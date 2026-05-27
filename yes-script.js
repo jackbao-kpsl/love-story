@@ -11,11 +11,9 @@ window.addEventListener('load', () => {
     music.addEventListener('loadedmetadata', restoreMusicTime)
     music.addEventListener('timeupdate', saveMusicTime)
     playMusic().catch(() => setMusicPlaying(false))
-    musicPlaying = true
     setTimeout(() => {
         if (music.paused) setMusicPlaying(false)
     }, 100)
-    document.getElementById('music-toggle').textContent = '🔊'
 })
 
 function setMusicPlaying(isPlaying) {
@@ -79,19 +77,6 @@ function launchConfetti() {
             colors
         })
     }, 300)
-}
-
-function toggleMusic() {
-    const music = document.getElementById('bg-music')
-    if (musicPlaying) {
-        music.pause()
-        musicPlaying = false
-        document.getElementById('music-toggle').textContent = '🔇'
-    } else {
-        music.play()
-        musicPlaying = true
-        document.getElementById('music-toggle').textContent = '🔊'
-    }
 }
 
 function toggleMusic() {

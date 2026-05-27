@@ -85,19 +85,6 @@ music.play().then(() => {
 function toggleMusic() {
     if (musicPlaying) {
         music.pause()
-        musicPlaying = false
-        document.getElementById('music-toggle').textContent = '🔇'
-    } else {
-        music.muted = false
-        music.play()
-        musicPlaying = true
-        document.getElementById('music-toggle').textContent = '🔊'
-    }
-}
-
-function toggleMusic() {
-    if (musicPlaying) {
-        music.pause()
         setMusicPlaying(false)
     } else {
         playMusic().catch(() => setMusicPlaying(false))
