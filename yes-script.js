@@ -2,7 +2,7 @@ let musicPlaying = false
 let music
 const musicTimeKey = 'loveStoryMusicTime'
 
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
     launchConfetti()
 
     // Autoplay music (works since user clicked Yes to get here)

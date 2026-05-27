@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦒💜🦥</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preload" as="audio" href="music/Carpe%20sakuracloud%20-%20silly%20cat.m4a" type="audio/mp4">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -26,8 +27,8 @@
         <div id="tease-toast"></div>
     </div>
 
-    <audio id="bg-music" loop autoplay muted>
-        <source src="music/Carpe%20sakuracloud%20-%20silly%20cat.mp3" type="audio/mp4">
+    <audio id="bg-music" loop autoplay muted preload="auto" playsinline>
+        <source src="music/Carpe%20sakuracloud%20-%20silly%20cat.m4a" type="audio/mp4">
     </audio>
 
     <button id="music-toggle" onclick="toggleMusic()" title="Toggle music">🔊</button>
