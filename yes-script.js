@@ -1,15 +1,47 @@
 let musicPlaying = false
+let music
+const musicTimeKey = 'loveStoryMusicTime'
 
 window.addEventListener('load', () => {
     launchConfetti()
 
     // Autoplay music (works since user clicked Yes to get here)
-    const music = document.getElementById('bg-music')
+    music = document.getElementById('bg-music')
     music.volume = 0.3
-    music.play().catch(() => {})
+    music.addEventListener('loadedmetadata', restoreMusicTime)
+    music.addEventListener('timeupdate', saveMusicTime)
+    playMusic().catch(() => setMusicPlaying(false))
     musicPlaying = true
+    setTimeout(() => {
+        if (music.paused) setMusicPlaying(false)
+    }, 100)
     document.getElementById('music-toggle').textContent = '🔊'
 })
+
+function setMusicPlaying(isPlaying) {
+    musicPlaying = isPlaying
+    document.getElementById('music-toggle').textContent = isPlaying ? '🔊' : '🔇'
+}
+
+function playMusic() {
+    music.muted = false
+    return music.play().then(() => setMusicPlaying(true))
+}
+
+function restoreMusicTime() {
+    const savedTime = Number(localStorage.getItem(musicTimeKey))
+    if (Number.isFinite(savedTime) && savedTime > 0 && savedTime < music.duration - 1) {
+        music.currentTime = savedTime
+    }
+}
+
+function saveMusicTime() {
+    if (Number.isFinite(music.currentTime)) {
+        localStorage.setItem(musicTimeKey, String(music.currentTime))
+    }
+}
+
+window.addEventListener('beforeunload', saveMusicTime)
 
 function launchConfetti() {
     const colors = ['#ff69b4', '#ff1493', '#ff85a2', '#ffb3c1', '#ff0000', '#ff6347', '#fff', '#ffdf00']
@@ -59,5 +91,14 @@ function toggleMusic() {
         music.play()
         musicPlaying = true
         document.getElementById('music-toggle').textContent = '🔊'
+    }
+}
+
+function toggleMusic() {
+    if (musicPlaying) {
+        music.pause()
+        setMusicPlaying(false)
+    } else {
+        playMusic().catch(() => setMusicPlaying(false))
     }
 }

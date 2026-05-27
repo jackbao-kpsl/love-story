@@ -32,23 +32,53 @@ let yesTeasedCount = 0
 
 let noClickCount = 0
 let runawayEnabled = false
-let musicPlaying = true
+let musicPlaying = false
+const musicTimeKey = 'loveStoryMusicTime'
 
 const catGif = document.getElementById('cat-gif')
 const yesBtn = document.getElementById('yes-btn')
 const noBtn = document.getElementById('no-btn')
 const music = document.getElementById('bg-music')
+const musicToggle = document.getElementById('music-toggle')
+
+function setMusicPlaying(isPlaying) {
+    musicPlaying = isPlaying
+    musicToggle.textContent = isPlaying ? '🔊' : '🔇'
+}
+
+function playMusic() {
+    music.muted = false
+    return music.play().then(() => setMusicPlaying(true))
+}
+
+function restoreMusicTime() {
+    const savedTime = Number(localStorage.getItem(musicTimeKey))
+    if (Number.isFinite(savedTime) && savedTime > 0 && savedTime < music.duration - 1) {
+        music.currentTime = savedTime
+    }
+}
+
+function saveMusicTime() {
+    if (Number.isFinite(music.currentTime)) {
+        localStorage.setItem(musicTimeKey, String(music.currentTime))
+    }
+}
+
+music.addEventListener('loadedmetadata', restoreMusicTime)
+music.addEventListener('timeupdate', saveMusicTime)
+window.addEventListener('beforeunload', saveMusicTime)
 
 // Autoplay: audio starts muted (bypasses browser policy), unmute immediately
 music.muted = true
 music.volume = 0.3
 music.play().then(() => {
     music.muted = false
+    setMusicPlaying(true)
 }).catch(() => {
     // Fallback: unmute on first interaction
     document.addEventListener('click', () => {
         music.muted = false
-        music.play().catch(() => {})
+        playMusic().catch(() => setMusicPlaying(false))
     }, { once: true })
 })
 
@@ -65,6 +95,15 @@ function toggleMusic() {
     }
 }
 
+function toggleMusic() {
+    if (musicPlaying) {
+        music.pause()
+        setMusicPlaying(false)
+    } else {
+        playMusic().catch(() => setMusicPlaying(false))
+    }
+}
+
 function handleYesClick() {
     if (!runawayEnabled) {
         // Tease her to try No first
@@ -73,6 +112,7 @@ function handleYesClick() {
         showTeaseMessage(msg)
         return
     }
+    saveMusicTime()
     window.location.href = 'yes.html'
 }
 
